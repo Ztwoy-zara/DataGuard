@@ -1,0 +1,92 @@
+[
+  {
+    "id": "olist_sales_revenue",
+    "title": "Olist 销售额口径",
+    "keywords": ["销售额", "成交额", "商品金额", "营收", "GMV"],
+    "content": "Olist 商品销售额使用 ROUND(SUM(order_items.price), 2) 计算并保留两位小数，不包含运费。结果字段统一命名为 total_revenue。order_items 中一行代表一个订单商品。"
+  },
+  {
+    "id": "olist_freight_value",
+    "title": "Olist 运费口径",
+    "keywords": ["运费", "物流费用", "配送费用"],
+    "content": "Olist 运费使用 ROUND(SUM(order_items.freight_value), 2) 计算。若计算含运费交易额，可使用 ROUND(SUM(order_items.price + order_items.freight_value), 2)。"
+  },
+  {
+    "id": "olist_order_count",
+    "title": "Olist 订单数量",
+    "keywords": ["订单数量", "订单数", "多少笔订单", "下单量"],
+    "content": "订单数量应使用 COUNT(DISTINCT orders.order_id)，避免连接 order_items 或 order_payments 后重复计算订单。结果字段统一命名为 order_count。"
+  },
+  {
+    "id": "olist_customer_count",
+    "title": "Olist 客户数量",
+    "keywords": ["客户数量", "用户数量", "买家数量", "独立客户"],
+    "content": "独立客户数量使用 COUNT(DISTINCT customers.customer_unique_id)。customers.customer_id 是订单级客户标识，同一真实客户可能对应多个 customer_id。结果字段统一命名为 customer_count。"
+  },
+  {
+    "id": "olist_order_customer_relationship",
+    "title": "订单与客户表关系",
+    "keywords": ["客户订单", "客户地区", "买家", "订单客户"],
+    "content": "orders.customer_id 对应 customers.customer_id。客户所在城市字段为 customers.customer_city，州字段为 customers.customer_state，真实客户标识为 customers.customer_unique_id。"
+  },
+  {
+    "id": "olist_order_item_relationship",
+    "title": "订单商品表关系",
+    "keywords": ["订单商品", "商品销售", "卖家销售", "订单明细"],
+    "content": "order_items.order_id 对应 orders.order_id，order_items.product_id 对应 products.product_id，order_items.seller_id 对应 sellers.seller_id。"
+  },
+  {
+    "id": "olist_time_range",
+    "title": "Olist 时间范围",
+    "keywords": ["月份", "月度", "季度", "年份", "下单时间"],
+    "content": "订单创建时间字段为 orders.order_purchase_timestamp。月份统计使用左闭右开的时间范围，例如 2018年8月使用 >= '2018-08-01' AND < '2018-09-01'。"
+  },
+  {
+    "id": "olist_delivered_orders",
+    "title": "已完成订单口径",
+    "keywords": ["已完成订单", "已送达", "成功订单", "有效订单"],
+    "content": "已完成或已送达订单使用 orders.order_status = 'delivered'。统计已送达订单数量时使用 COUNT(DISTINCT order_id)，结果字段统一命名为 order_count。"
+  },
+  {
+    "id": "olist_product_category",
+    "title": "商品品类关系",
+    "keywords": ["商品品类", "产品类别", "英文品类", "品类销售额"],
+    "content": "products.product_category_name 对应 product_category_translation.product_category_name，英文品类字段为 product_category_translation.product_category_name_english。"
+  },
+  {
+    "id": "olist_review_score",
+    "title": "客户评价口径",
+    "keywords": ["评分", "评价", "满意度", "差评", "评论"],
+    "content": "评价分数字段为 order_reviews.review_score，取值通常为1至5。平均评分使用 ROUND(AVG(review_score), 2)，结果字段统一命名为 average_review_score。差评通常定义为 review_score <= 2。"
+  },
+  {
+    "id": "olist_delivery_delay",
+    "title": "配送延迟口径",
+    "keywords": ["延迟配送", "逾期订单", "配送时长", "准时率"],
+    "content": "配送延迟指已送达订单中，orders.order_delivered_customer_date 晚于 orders.order_estimated_delivery_date 的订单。应筛选 order_status = 'delivered'，使用 COUNT(DISTINCT order_id)，结果字段统一命名为 delayed_order_count。"
+  },
+  {
+    "id": "olist_payment_value",
+    "title": "支付金额口径",
+    "keywords": ["支付金额", "付款金额", "支付方式", "分期付款"],
+    "content": "支付金额使用 order_payments.payment_value。一个订单可能有多条支付记录，因此订单数量仍应使用 COUNT(DISTINCT order_id)。支付方式字段为 payment_type。"
+  },
+  {
+    "id": "olist_verified_state_revenue",
+    "title": "已验证SQL：各州销售额",
+    "keywords": ["各州销售额", "地区销售排名", "州营收"],
+    "content": "已验证写法：SELECT c.customer_state, ROUND(SUM(oi.price), 2) AS total_revenue FROM orders o JOIN customers c ON o.customer_id = c.customer_id JOIN order_items oi ON o.order_id = oi.order_id GROUP BY c.customer_state ORDER BY total_revenue DESC"
+  },
+  {
+    "id": "olist_verified_category_revenue",
+    "title": "已验证SQL：商品品类销售额",
+    "keywords": ["品类销售额", "类别营收", "热销品类"],
+    "content": "已验证写法：SELECT t.product_category_name_english AS category, ROUND(SUM(oi.price), 2) AS total_revenue FROM order_items oi JOIN products p ON oi.product_id = p.product_id LEFT JOIN product_category_translation t ON p.product_category_name = t.product_category_name GROUP BY category ORDER BY total_revenue DESC"
+  },
+  {
+    "id": "olist_verified_monthly_orders",
+    "title": "已验证SQL：月度订单量",
+    "keywords": ["月度订单量", "每月订单", "订单趋势"],
+    "content": "已验证写法：SELECT DATE_TRUNC('month', order_purchase_timestamp) AS order_month, COUNT(DISTINCT order_id) AS order_count FROM orders GROUP BY order_month ORDER BY order_month"
+  }
+]

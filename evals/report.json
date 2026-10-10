@@ -1,0 +1,168 @@
+{
+  "summary": {
+    "evaluated_at": "2026-10-10T07:57:10.581198+00:00",
+    "total_cases": 5,
+    "answer_accuracy": 1.0,
+    "column_accuracy": 1.0,
+    "total_tokens": 3650,
+    "average_tokens": 730.0,
+    "average_latency_seconds": 5.759
+  },
+  "results": [
+    {
+      "id": "total_by_customer",
+      "question": "每位客户的消费总额是多少？按金额从高到低排序",
+      "passed": true,
+      "answer_passed": true,
+      "columns_passed": true,
+      "sql": "SELECT c.name, ROUND(SUM(o.amount), 2) AS total_amount FROM customers AS c JOIN orders AS o ON c.id = o.customer_id GROUP BY c.name ORDER BY total_amount DESC",
+      "actual_columns": [
+        "name",
+        "total_amount"
+      ],
+      "expected_columns": [
+        "name",
+        "total_amount"
+      ],
+      "actual_rows": [
+        [
+          "王五",
+          899.0
+        ],
+        [
+          "张三",
+          898.0
+        ],
+        [
+          "李四",
+          199.0
+        ]
+      ],
+      "expected_rows": [
+        [
+          "王五",
+          899.0
+        ],
+        [
+          "张三",
+          898.0
+        ],
+        [
+          "李四",
+          199.0
+        ]
+      ],
+      "tokens": 745,
+      "latency_seconds": 25.331,
+      "error": null
+    },
+    {
+      "id": "beijing_customers",
+      "question": "北京有哪些客户？",
+      "passed": true,
+      "answer_passed": true,
+      "columns_passed": true,
+      "sql": "SELECT name FROM customers WHERE city = '北京'",
+      "actual_columns": [
+        "name"
+      ],
+      "expected_columns": [
+        "name"
+      ],
+      "actual_rows": [
+        [
+          "李四"
+        ]
+      ],
+      "expected_rows": [
+        [
+          "李四"
+        ]
+      ],
+      "tokens": 748,
+      "latency_seconds": 0.902,
+      "error": null
+    },
+    {
+      "id": "order_count",
+      "question": "一共有多少笔订单？",
+      "passed": true,
+      "answer_passed": true,
+      "columns_passed": true,
+      "sql": "SELECT COUNT(*) AS order_count FROM orders",
+      "actual_columns": [
+        "order_count"
+      ],
+      "expected_columns": [
+        "order_count"
+      ],
+      "actual_rows": [
+        [
+          4
+        ]
+      ],
+      "expected_rows": [
+        [
+          4
+        ]
+      ],
+      "tokens": 689,
+      "latency_seconds": 0.66,
+      "error": null
+    },
+    {
+      "id": "max_order",
+      "question": "金额最高的一笔订单是多少钱？",
+      "passed": true,
+      "answer_passed": true,
+      "columns_passed": true,
+      "sql": "SELECT ROUND(MAX(amount), 2) AS max_amount FROM orders",
+      "actual_columns": [
+        "max_amount"
+      ],
+      "expected_columns": [
+        "max_amount"
+      ],
+      "actual_rows": [
+        [
+          899.0
+        ]
+      ],
+      "expected_rows": [
+        [
+          899.0
+        ]
+      ],
+      "tokens": 745,
+      "latency_seconds": 1.11,
+      "error": null
+    },
+    {
+      "id": "september_sales",
+      "question": "2026年9月的订单总金额是多少？",
+      "passed": true,
+      "answer_passed": true,
+      "columns_passed": true,
+      "sql": "SELECT ROUND(SUM(amount), 2) AS total_amount FROM orders WHERE order_date >= '2026-09-01' AND order_date < '2026-10-01'",
+      "actual_columns": [
+        "total_amount"
+      ],
+      "expected_columns": [
+        "total_amount"
+      ],
+      "actual_rows": [
+        [
+          1097.0
+        ]
+      ],
+      "expected_rows": [
+        [
+          1097.0
+        ]
+      ],
+      "tokens": 723,
+      "latency_seconds": 0.791,
+      "error": null
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+[
+  {
+    "id": "customer_spend",
+    "question": "每位客户的消费总额是多少？",
+    "expected_ids": [
+      "metric_customer_spend",
+      "verified_sql_customer_total"
+    ]
+  },
+  {
+    "id": "monthly_sales",
+    "question": "2026年9月的订单总金额是多少？",
+    "expected_ids": [
+      "time_month",
+      "verified_sql_month_total",
+      "metric_sales_amount"
+    ]
+  },
+  {
+    "id": "order_count",
+    "question": "一共有多少笔订单？",
+    "expected_ids": [
+      "metric_order_count"
+    ]
+  },
+  {
+    "id": "active_customer",
+    "question": "什么样的客户算活跃客户？",
+    "expected_ids": [
+      "metric_active_customer"
+    ]
+  },
+  {
+    "id": "region_definition",
+    "question": "北京属于哪个业务区域？",
+    "expected_ids": [
+      "dimension_region"
+    ]
+  },
+  {
+    "id": "table_relationship",
+    "question": "客户表和订单表应该如何关联？",
+    "expected_ids": [
+      "schema_relationship"
+    ]
+  },
+  {
+    "id": "sensitive_fields",
+    "question": "分析员能否查看客户邮箱和手机号？",
+    "expected_ids": [
+      "security_sensitive_fields"
+    ]
+  },
+  {
+    "id": "sales_definition",
+    "question": "销售额指标应该如何计算？",
+    "expected_ids": [
+      "metric_sales_amount"
+    ]
+  }
+]

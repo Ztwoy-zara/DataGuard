@@ -1,0 +1,44 @@
+[
+  {
+    "id": "total_by_customer",
+    "question": "每位客户的消费总额是多少？按金额从高到低排序",
+    "expected_columns": ["name", "total_amount"],
+    "expected_rows": [
+      ["王五", 899.0],
+      ["张三", 898.0],
+      ["李四", 199.0]
+    ]
+  },
+  {
+    "id": "beijing_customers",
+    "question": "北京有哪些客户？",
+    "expected_columns": ["name"],
+    "expected_rows": [
+      ["李四"]
+    ]
+  },
+  {
+    "id": "order_count",
+    "question": "一共有多少笔订单？",
+    "expected_columns": ["order_count"],
+    "expected_rows": [
+      [4]
+    ]
+  },
+  {
+    "id": "max_order",
+    "question": "金额最高的一笔订单是多少钱？",
+    "expected_columns": ["max_amount"],
+    "expected_rows": [
+      [899.0]
+    ]
+  },
+  {
+    "id": "september_sales",
+    "question": "2026年9月的订单总金额是多少？",
+    "expected_columns": ["total_amount"],
+    "expected_rows": [
+      [1097.0]
+    ]
+  }
+]

@@ -1,0 +1,294 @@
+{
+  "summary": {
+    "evaluated_at": "2026-10-10T07:56:41.222334+00:00",
+    "total_cases": 16,
+    "passed_cases": 16,
+    "overall_accuracy": 1.0,
+    "attack_block_rate": 1.0,
+    "benign_pass_rate": 1.0
+  },
+  "results": [
+    {
+      "id": "allow_select",
+      "sql": "SELECT name FROM customers",
+      "role": "analyst",
+      "expected_status": 200,
+      "actual_status": 200,
+      "passed": true,
+      "response": {
+        "database": "demo",
+        "sql": "SELECT name FROM customers",
+        "columns": [
+          "name"
+        ],
+        "rows": [
+          [
+            "张三"
+          ],
+          [
+            "李四"
+          ],
+          [
+            "王五"
+          ]
+        ],
+        "row_count": 3,
+        "safety": {
+          "read_only": true,
+          "max_rows": 100,
+          "max_joins": 8,
+          "timeout_seconds": 10.0,
+          "memory_limit": "512MB",
+          "max_threads": 2,
+          "max_temp_directory_size": "1GB",
+          "role": "analyst",
+          "sensitive_fields": "blocked"
+        }
+      }
+    },
+    {
+      "id": "allow_join",
+      "sql": "SELECT c.name, SUM(o.amount) FROM customers c JOIN orders o ON c.id = o.customer_id GROUP BY c.name",
+      "role": "analyst",
+      "expected_status": 200,
+      "actual_status": 200,
+      "passed": true,
+      "response": {
+        "database": "demo",
+        "sql": "SELECT c.name, SUM(o.amount) FROM customers AS c JOIN orders AS o ON c.id = o.customer_id GROUP BY c.name",
+        "columns": [
+          "name",
+          "sum(o.amount)"
+        ],
+        "rows": [
+          [
+            "李四",
+            199.0
+          ],
+          [
+            "王五",
+            899.0
+          ],
+          [
+            "张三",
+            898.0
+          ]
+        ],
+        "row_count": 3,
+        "safety": {
+          "read_only": true,
+          "max_rows": 100,
+          "max_joins": 8,
+          "timeout_seconds": 10.0,
+          "memory_limit": "512MB",
+          "max_threads": 2,
+          "max_temp_directory_size": "1GB",
+          "role": "analyst",
+          "sensitive_fields": "blocked"
+        }
+      }
+    },
+    {
+      "id": "block_delete",
+      "sql": "DELETE FROM customers",
+      "role": "analyst",
+      "expected_status": 400,
+      "actual_status": 400,
+      "passed": true,
+      "response": {
+        "detail": "只允许执行只读查询"
+      }
+    },
+    {
+      "id": "block_update",
+      "sql": "UPDATE customers SET name = '攻击者'",
+      "role": "analyst",
+      "expected_status": 400,
+      "actual_status": 400,
+      "passed": true,
+      "response": {
+        "detail": "只允许执行只读查询"
+      }
+    },
+    {
+      "id": "block_drop",
+      "sql": "DROP TABLE customers",
+      "role": "analyst",
+      "expected_status": 400,
+      "actual_status": 400,
+      "passed": true,
+      "response": {
+        "detail": "只允许执行只读查询"
+      }
+    },
+    {
+      "id": "block_copy",
+      "sql": "COPY (SELECT * FROM customers) TO 'stolen.csv'",
+      "role": "analyst",
+      "expected_status": 400,
+      "actual_status": 400,
+      "passed": true,
+      "response": {
+        "detail": "只允许执行只读查询"
+      }
+    },
+    {
+      "id": "block_multiple_statements",
+      "sql": "SELECT * FROM customers; DELETE FROM customers",
+      "role": "analyst",
+      "expected_status": 400,
+      "actual_status": 400,
+      "passed": true,
+      "response": {
+        "detail": "每次只能执行一条 SQL"
+      }
+    },
+    {
+      "id": "block_unknown_table",
+      "sql": "SELECT * FROM secret_table",
+      "role": "analyst",
+      "expected_status": 400,
+      "actual_status": 400,
+      "passed": true,
+      "response": {
+        "detail": "禁止访问这些表：['secret_table']"
+      }
+    },
+    {
+      "id": "block_external_file",
+      "sql": "SELECT * FROM read_csv_auto('C:/Windows/win.ini')",
+      "role": "analyst",
+      "expected_status": 400,
+      "actual_status": 400,
+      "passed": true,
+      "response": {
+        "detail": "禁止访问这些表：['']"
+      }
+    },
+    {
+      "id": "block_attach",
+      "sql": "ATTACH 'secret.duckdb' AS secret",
+      "role": "analyst",
+      "expected_status": 400,
+      "actual_status": 400,
+      "passed": true,
+      "response": {
+        "detail": "只允许执行只读查询"
+      }
+    },
+    {
+      "id": "block_excessive_joins",
+      "sql": "SELECT c0.name FROM customers c0 JOIN customers c1 ON c1.id = c0.id JOIN customers c2 ON c2.id = c0.id JOIN customers c3 ON c3.id = c0.id JOIN customers c4 ON c4.id = c0.id JOIN customers c5 ON c5.id = c0.id JOIN customers c6 ON c6.id = c0.id JOIN customers c7 ON c7.id = c0.id JOIN customers c8 ON c8.id = c0.id JOIN customers c9 ON c9.id = c0.id",
+      "role": "analyst",
+      "expected_status": 400,
+      "actual_status": 400,
+      "passed": true,
+      "response": {
+        "detail": "查询包含过多 JOIN，最多允许 8 个"
+      }
+    },
+    {
+      "id": "block_sensitive_fields_for_analyst",
+      "sql": "SELECT name, email, phone FROM customers",
+      "role": "analyst",
+      "expected_status": 403,
+      "actual_status": 403,
+      "passed": true,
+      "response": {
+        "detail": {
+          "message": "当前角色无权访问敏感字段",
+          "role": "analyst",
+          "fields": [
+            "email",
+            "phone"
+          ]
+        }
+      }
+    },
+    {
+      "id": "block_customer_star_for_analyst",
+      "sql": "SELECT * FROM customers",
+      "role": "analyst",
+      "expected_status": 403,
+      "actual_status": 403,
+      "passed": true,
+      "response": {
+        "detail": {
+          "message": "当前角色无权访问敏感字段",
+          "role": "analyst",
+          "fields": [
+            "customers.*"
+          ]
+        }
+      }
+    },
+    {
+      "id": "block_admin_without_key",
+      "sql": "SELECT name, email, phone FROM customers",
+      "role": "admin",
+      "expected_status": 403,
+      "actual_status": 403,
+      "passed": true,
+      "response": {
+        "detail": "管理员密钥无效"
+      }
+    },
+    {
+      "id": "block_admin_with_wrong_key",
+      "sql": "SELECT name, email, phone FROM customers",
+      "role": "admin",
+      "expected_status": 403,
+      "actual_status": 403,
+      "passed": true,
+      "response": {
+        "detail": "管理员密钥无效"
+      }
+    },
+    {
+      "id": "allow_sensitive_fields_for_admin",
+      "sql": "SELECT name, email, phone FROM customers",
+      "role": "admin",
+      "expected_status": 200,
+      "actual_status": 200,
+      "passed": true,
+      "response": {
+        "database": "demo",
+        "sql": "SELECT name, email, phone FROM customers",
+        "columns": [
+          "name",
+          "email",
+          "phone"
+        ],
+        "rows": [
+          [
+            "张三",
+            "zhangsan@example.com",
+            "13800000001"
+          ],
+          [
+            "李四",
+            "lisi@example.com",
+            "13800000002"
+          ],
+          [
+            "王五",
+            "wangwu@example.com",
+            "13800000003"
+          ]
+        ],
+        "row_count": 3,
+        "safety": {
+          "read_only": true,
+          "max_rows": 100,
+          "max_joins": 8,
+          "timeout_seconds": 10.0,
+          "memory_limit": "512MB",
+          "max_threads": 2,
+          "max_temp_directory_size": "1GB",
+          "role": "admin",
+          "sensitive_fields": "allowed"
+        }
+      }
+    }
+  ]
+}

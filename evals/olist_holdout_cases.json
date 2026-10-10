@@ -1,0 +1,104 @@
+[
+  {
+    "id": "holdout_canceled_order_count",
+    "question": "状态为 canceled 的订单一共有多少笔？",
+    "expected_columns": ["canceled_order_count"],
+    "expected_rows": [
+      [625]
+    ]
+  },
+  {
+    "id": "holdout_unavailable_order_count",
+    "question": "状态为 unavailable 的订单一共有多少笔？",
+    "expected_columns": ["unavailable_order_count"],
+    "expected_rows": [
+      [609]
+    ]
+  },
+  {
+    "id": "holdout_average_freight_value",
+    "question": "所有订单商品记录的平均运费是多少？结果保留两位小数",
+    "expected_columns": ["average_freight_value"],
+    "expected_rows": [
+      [19.99]
+    ]
+  },
+  {
+    "id": "holdout_credit_card_payment_total",
+    "question": "使用信用卡支付的支付总金额是多少？结果保留两位小数",
+    "expected_columns": ["total_payment_value"],
+    "expected_rows": [
+      [12542084.19]
+    ]
+  },
+  {
+    "id": "holdout_payment_type_counts",
+    "question": "按支付方式统计支付记录数，按记录数从高到低排列",
+    "expected_columns": ["payment_type", "payment_count"],
+    "expected_rows": [
+      ["credit_card", 76795],
+      ["boleto", 19784],
+      ["voucher", 5775],
+      ["debit_card", 1529],
+      ["not_defined", 3]
+    ]
+  },
+  {
+    "id": "holdout_one_star_review_count",
+    "question": "评分为1星的评价记录一共有多少条？",
+    "expected_columns": ["review_count"],
+    "expected_rows": [
+      [11424]
+    ]
+  },
+  {
+    "id": "holdout_average_delivery_days",
+    "question": "对已有实际送达时间的订单，从购买到送达平均需要多少个整天？结果保留两位小数",
+    "expected_columns": ["average_delivery_days"],
+    "expected_rows": [
+      [12.5]
+    ]
+  },
+  {
+    "id": "holdout_repeat_customer_count",
+    "question": "按 customer_unique_id 识别客户，有两笔及以上不同订单的客户共有多少位？",
+    "expected_columns": ["repeat_customer_count"],
+    "expected_rows": [
+      [2997]
+    ]
+  },
+  {
+    "id": "holdout_multi_item_order_count",
+    "question": "在 order_items 中包含两条及以上商品记录的订单共有多少笔？",
+    "expected_columns": ["multi_item_order_count"],
+    "expected_rows": [
+      [9803]
+    ]
+  },
+  {
+    "id": "holdout_november_2017_order_count",
+    "question": "2017年11月一共有多少笔订单？",
+    "expected_columns": ["order_count"],
+    "expected_rows": [
+      [7544]
+    ]
+  },
+  {
+    "id": "holdout_top_three_seller_states",
+    "question": "按卖家所在州汇总商品销售额，返回销售额最高的三个州并降序排列，销售额保留两位小数",
+    "expected_columns": ["seller_state", "total_revenue"],
+    "expected_rows": [
+      ["SP", 8753396.21],
+      ["PR", 1261887.21],
+      ["MG", 1011564.74]
+    ]
+  },
+  {
+    "id": "holdout_five_star_percentage",
+    "question": "所有评价记录中5星评价占百分之多少？结果保留两位小数",
+    "expected_columns": ["five_star_percentage"],
+    "expected_rows": [
+      [57.78]
+    ]
+  }
+]

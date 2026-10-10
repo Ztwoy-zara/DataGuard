@@ -1,0 +1,239 @@
+{
+  "summary": {
+    "evaluated_at": "2026-10-10T05:27:08.206014+00:00",
+    "total_cases": 8,
+    "passed_cases": 8,
+    "hit_rate_at_3": 1.0,
+    "mean_reciprocal_rank": 1.0,
+    "average_latency_seconds": 5.8013
+  },
+  "results": [
+    {
+      "id": "customer_spend",
+      "question": "每位客户的消费总额是多少？",
+      "passed": true,
+      "expected_ids": [
+        "metric_customer_spend",
+        "verified_sql_customer_total"
+      ],
+      "retrieved": [
+        {
+          "id": "metric_customer_spend",
+          "title": "客户消费总额",
+          "score": 0.6823
+        },
+        {
+          "id": "verified_sql_customer_total",
+          "title": "已验证SQL：客户消费总额",
+          "score": 0.6378
+        },
+        {
+          "id": "metric_sales_amount",
+          "title": "销售额和订单总金额",
+          "score": 0.5691
+        }
+      ],
+      "first_relevant_rank": 1,
+      "reciprocal_rank": 1.0,
+      "latency_seconds": 46.3569
+    },
+    {
+      "id": "monthly_sales",
+      "question": "2026年9月的订单总金额是多少？",
+      "passed": true,
+      "expected_ids": [
+        "time_month",
+        "verified_sql_month_total",
+        "metric_sales_amount"
+      ],
+      "retrieved": [
+        {
+          "id": "verified_sql_month_total",
+          "title": "已验证SQL：月度订单总额",
+          "score": 0.569
+        },
+        {
+          "id": "metric_sales_amount",
+          "title": "销售额和订单总金额",
+          "score": 0.5178
+        },
+        {
+          "id": "metric_order_count",
+          "title": "订单数量",
+          "score": 0.4932
+        }
+      ],
+      "first_relevant_rank": 1,
+      "reciprocal_rank": 1.0,
+      "latency_seconds": 0.0081
+    },
+    {
+      "id": "order_count",
+      "question": "一共有多少笔订单？",
+      "passed": true,
+      "expected_ids": [
+        "metric_order_count"
+      ],
+      "retrieved": [
+        {
+          "id": "metric_order_count",
+          "title": "订单数量",
+          "score": 0.5996
+        },
+        {
+          "id": "verified_sql_month_total",
+          "title": "已验证SQL：月度订单总额",
+          "score": 0.4714
+        },
+        {
+          "id": "metric_sales_amount",
+          "title": "销售额和订单总金额",
+          "score": 0.4542
+        }
+      ],
+      "first_relevant_rank": 1,
+      "reciprocal_rank": 1.0,
+      "latency_seconds": 0.0078
+    },
+    {
+      "id": "active_customer",
+      "question": "什么样的客户算活跃客户？",
+      "passed": true,
+      "expected_ids": [
+        "metric_active_customer"
+      ],
+      "retrieved": [
+        {
+          "id": "metric_active_customer",
+          "title": "活跃客户",
+          "score": 0.7572
+        },
+        {
+          "id": "metric_customer_spend",
+          "title": "客户消费总额",
+          "score": 0.5653
+        },
+        {
+          "id": "verified_sql_customer_total",
+          "title": "已验证SQL：客户消费总额",
+          "score": 0.5591
+        }
+      ],
+      "first_relevant_rank": 1,
+      "reciprocal_rank": 1.0,
+      "latency_seconds": 0.0087
+    },
+    {
+      "id": "region_definition",
+      "question": "北京属于哪个业务区域？",
+      "passed": true,
+      "expected_ids": [
+        "dimension_region"
+      ],
+      "retrieved": [
+        {
+          "id": "dimension_region",
+          "title": "地区口径",
+          "score": 0.5497
+        },
+        {
+          "id": "metric_customer_spend",
+          "title": "客户消费总额",
+          "score": 0.3522
+        },
+        {
+          "id": "schema_relationship",
+          "title": "表关系",
+          "score": 0.3468
+        }
+      ],
+      "first_relevant_rank": 1,
+      "reciprocal_rank": 1.0,
+      "latency_seconds": 0.0064
+    },
+    {
+      "id": "table_relationship",
+      "question": "客户表和订单表应该如何关联？",
+      "passed": true,
+      "expected_ids": [
+        "schema_relationship"
+      ],
+      "retrieved": [
+        {
+          "id": "schema_relationship",
+          "title": "表关系",
+          "score": 0.7228
+        },
+        {
+          "id": "metric_order_count",
+          "title": "订单数量",
+          "score": 0.588
+        },
+        {
+          "id": "metric_customer_spend",
+          "title": "客户消费总额",
+          "score": 0.5739
+        }
+      ],
+      "first_relevant_rank": 1,
+      "reciprocal_rank": 1.0,
+      "latency_seconds": 0.0079
+    },
+    {
+      "id": "sensitive_fields",
+      "question": "分析员能否查看客户邮箱和手机号？",
+      "passed": true,
+      "expected_ids": [
+        "security_sensitive_fields"
+      ],
+      "retrieved": [
+        {
+          "id": "security_sensitive_fields",
+          "title": "敏感字段权限",
+          "score": 0.468
+        },
+        {
+          "id": "schema_relationship",
+          "title": "表关系",
+          "score": 0.4555
+        },
+        {
+          "id": "verified_sql_customer_total",
+          "title": "已验证SQL：客户消费总额",
+          "score": 0.4517
+        }
+      ],
+      "first_relevant_rank": 1,
+      "reciprocal_rank": 1.0,
+      "latency_seconds": 0.0074
+    },
+    {
+      "id": "sales_definition",
+      "question": "销售额指标应该如何计算？",
+      "passed": true,
+      "expected_ids": [
+        "metric_sales_amount"
+      ],
+      "retrieved": [
+        {
+          "id": "metric_sales_amount",
+          "title": "销售额和订单总金额",
+          "score": 0.6579
+        },
+        {
+          "id": "verified_sql_customer_total",
+          "title": "已验证SQL：客户消费总额",
+          "score": 0.5906
+        },
+        {
+          "id": "verified_sql_month_total",
+          "title": "已验证SQL：月度订单总额",
+          "score": 0.5822
+        }
+      ],
+      "first_relevant_rank": 1,
+      "reciprocal_rank": 1.0,
+      "latency_seconds": 0.0073
+    }
+  ]
+}

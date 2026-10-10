@@ -1,0 +1,50 @@
+[
+  {
+    "id": "active_customer_missing_time",
+    "question": "查询活跃客户",
+    "should_clarify": true,
+    "expected_reason": "missing_time_range"
+  },
+  {
+    "id": "recent_orders_vague_time",
+    "question": "最近有哪些客户下过订单？",
+    "should_clarify": true,
+    "expected_reason": "ambiguous_time_range"
+  },
+  {
+    "id": "best_customer_ambiguous",
+    "question": "找出最好的客户",
+    "should_clarify": true,
+    "expected_reason": "ambiguous_metric"
+  },
+  {
+    "id": "valuable_customer_ambiguous",
+    "question": "谁是最有价值的客户？",
+    "should_clarify": true,
+    "expected_reason": "ambiguous_metric"
+  },
+  {
+    "id": "active_customer_with_month",
+    "question": "查询2026年9月的活跃客户",
+    "should_clarify": false,
+    "expected_reason": null
+  },
+  {
+    "id": "active_customer_last_30_days",
+    "question": "查询最近30天的活跃客户",
+    "should_clarify": false,
+    "expected_reason": null
+  },
+  {
+    "id": "monthly_sales",
+    "question": "2026年9月的订单总金额是多少？",
+    "should_clarify": false,
+    "expected_reason": null
+  },
+  {
+    "id": "customer_spend",
+    "question": "每位客户的消费总额是多少？",
+    "should_clarify": false,
+    "expected_reason": null
+  }
+]

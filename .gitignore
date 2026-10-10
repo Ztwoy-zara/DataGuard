@@ -1,0 +1,23 @@
+# Generated build artifacts
+target/
+.env
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Editor
+.vscode/
+
+# Downloaded upstream source
+WrenAI/
+
+# Temporary database files
+*.duckdb.wal
+data/*.duckdb
+data/olist_raw/
+
+# Local Chroma vector database
+rag/chroma_db/

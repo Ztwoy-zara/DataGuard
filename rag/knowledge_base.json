@@ -1,0 +1,62 @@
+[
+  {
+    "id": "metric_sales_amount",
+    "title": "销售额和订单总金额",
+    "keywords": ["销售额", "订单金额", "订单总额", "成交额", "消费金额"],
+    "content": "销售额、订单金额、订单总额和成交额均使用 SUM(orders.amount) 计算。结果字段统一命名为 total_amount。"
+  },
+  {
+    "id": "metric_customer_spend",
+    "title": "客户消费总额",
+    "keywords": ["客户消费", "消费总额", "客户贡献", "客户金额"],
+    "content": "客户消费总额需要连接 customers 和 orders，连接条件为 customers.id = orders.customer_id，并按照 customers.name 分组。"
+  },
+  {
+    "id": "metric_order_count",
+    "title": "订单数量",
+    "keywords": ["订单数量", "多少笔订单", "订单数", "下单次数"],
+    "content": "订单数量使用 COUNT(*) 计算，结果字段统一命名为 order_count。"
+  },
+  {
+    "id": "metric_active_customer",
+    "title": "活跃客户",
+    "keywords": ["活跃客户", "有消费的客户", "下过单的客户"],
+    "content": "活跃客户指指定时间范围内至少存在一笔订单的客户。如果用户没有提供时间范围，应主动询问统计周期。"
+  },
+  {
+    "id": "dimension_region",
+    "title": "地区口径",
+    "keywords": ["华东", "华北", "华南", "地区", "区域"],
+    "content": "演示数据中，上海属于华东，北京属于华北，深圳属于华南。客户地区字段为 customers.city。"
+  },
+  {
+    "id": "time_month",
+    "title": "月份时间范围",
+    "keywords": ["月份", "本月", "上月", "9月", "10月", "月度"],
+    "content": "月份查询使用左闭右开的日期范围。例如 2026年9月使用 order_date >= '2026-09-01' AND order_date < '2026-10-01'。"
+  },
+  {
+    "id": "schema_relationship",
+    "title": "表关系",
+    "keywords": ["客户", "订单", "关联", "连接"],
+    "content": "customers 保存客户信息，orders 保存订单信息。orders.customer_id 对应 customers.id。订单时间字段为 orders.order_date。"
+  },
+  {
+    "id": "security_sensitive_fields",
+    "title": "敏感字段权限",
+    "keywords": ["邮箱", "手机号", "联系方式", "敏感字段", "权限"],
+    "content": "customers.email 和 customers.phone 是敏感字段。analyst 角色禁止访问，admin 角色允许访问。"
+  },
+  {
+    "id": "verified_sql_customer_total",
+    "title": "已验证SQL：客户消费总额",
+    "keywords": ["每位客户", "消费总额", "金额排序"],
+    "content": "已验证写法：SELECT c.name, SUM(o.amount) AS total_amount FROM customers c JOIN orders o ON c.id = o.customer_id GROUP BY c.name ORDER BY total_amount DESC"
+  },
+  {
+    "id": "verified_sql_month_total",
+    "title": "已验证SQL：月度订单总额",
+    "keywords": ["月度订单", "9月订单", "月销售额"],
+    "content": "已验证写法：SELECT SUM(amount) AS total_amount FROM orders WHERE order_date >= '2026-09-01' AND order_date < '2026-10-01'"
+  }
+]

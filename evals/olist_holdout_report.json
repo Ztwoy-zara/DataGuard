@@ -1,0 +1,482 @@
+{
+  "summary": {
+    "evaluated_at": "2026-10-10T07:45:41.558887+00:00",
+    "database": "olist",
+    "evaluation_type": "holdout",
+    "total_cases": 12,
+    "passed_cases": 12,
+    "semantic_accuracy": 1.0,
+    "strict_passed_cases": 5,
+    "strict_accuracy": 0.4166666666666667,
+    "exact_column_accuracy": 0.4166666666666667,
+    "total_tokens": 21069,
+    "average_tokens": 1755.75,
+    "average_latency_seconds": 3.332
+  },
+  "results": [
+    {
+      "id": "holdout_canceled_order_count",
+      "question": "状态为 canceled 的订单一共有多少笔？",
+      "passed": true,
+      "strict_passed": false,
+      "answer_passed": true,
+      "columns_passed": false,
+      "database": "olist",
+      "sql": "SELECT COUNT(DISTINCT order_id) AS order_count FROM orders WHERE order_status = 'canceled'",
+      "rag_source_ids": [
+        "olist_order_count",
+        "olist_delivered_orders",
+        "olist_payment_value"
+      ],
+      "actual_columns": [
+        "order_count"
+      ],
+      "expected_columns": [
+        "canceled_order_count"
+      ],
+      "actual_rows": [
+        [
+          625
+        ]
+      ],
+      "expected_rows": [
+        [
+          625
+        ]
+      ],
+      "tokens": 1556,
+      "latency_seconds": 11.063,
+      "error": null
+    },
+    {
+      "id": "holdout_unavailable_order_count",
+      "question": "状态为 unavailable 的订单一共有多少笔？",
+      "passed": true,
+      "strict_passed": false,
+      "answer_passed": true,
+      "columns_passed": false,
+      "database": "olist",
+      "sql": "SELECT COUNT(DISTINCT order_id) AS order_count FROM orders WHERE order_status = 'unavailable'",
+      "rag_source_ids": [
+        "olist_order_count",
+        "olist_delivered_orders",
+        "olist_sales_revenue"
+      ],
+      "actual_columns": [
+        "order_count"
+      ],
+      "expected_columns": [
+        "unavailable_order_count"
+      ],
+      "actual_rows": [
+        [
+          609
+        ]
+      ],
+      "expected_rows": [
+        [
+          609
+        ]
+      ],
+      "tokens": 1570,
+      "latency_seconds": 0.863,
+      "error": null
+    },
+    {
+      "id": "holdout_average_freight_value",
+      "question": "所有订单商品记录的平均运费是多少？结果保留两位小数",
+      "passed": true,
+      "strict_passed": true,
+      "answer_passed": true,
+      "columns_passed": true,
+      "database": "olist",
+      "sql": "SELECT ROUND(AVG(freight_value), 2) AS average_freight_value FROM order_items",
+      "rag_source_ids": [
+        "olist_freight_value",
+        "olist_order_count",
+        "olist_sales_revenue"
+      ],
+      "actual_columns": [
+        "average_freight_value"
+      ],
+      "expected_columns": [
+        "average_freight_value"
+      ],
+      "actual_rows": [
+        [
+          19.99
+        ]
+      ],
+      "expected_rows": [
+        [
+          19.99
+        ]
+      ],
+      "tokens": 1621,
+      "latency_seconds": 0.946,
+      "error": null
+    },
+    {
+      "id": "holdout_credit_card_payment_total",
+      "question": "使用信用卡支付的支付总金额是多少？结果保留两位小数",
+      "passed": true,
+      "strict_passed": false,
+      "answer_passed": true,
+      "columns_passed": false,
+      "database": "olist",
+      "sql": "SELECT ROUND(SUM(payment_value), 2) AS total_amount FROM order_payments WHERE payment_type = 'credit_card'",
+      "rag_source_ids": [
+        "olist_payment_value",
+        "olist_sales_revenue",
+        "olist_freight_value"
+      ],
+      "actual_columns": [
+        "total_amount"
+      ],
+      "expected_columns": [
+        "total_payment_value"
+      ],
+      "actual_rows": [
+        [
+          12542084.19
+        ]
+      ],
+      "expected_rows": [
+        [
+          12542084.19
+        ]
+      ],
+      "tokens": 1949,
+      "latency_seconds": 2.437,
+      "error": null
+    },
+    {
+      "id": "holdout_payment_type_counts",
+      "question": "按支付方式统计支付记录数，按记录数从高到低排列",
+      "passed": true,
+      "strict_passed": false,
+      "answer_passed": true,
+      "columns_passed": false,
+      "database": "olist",
+      "sql": "SELECT payment_type, COUNT(*) AS payment_record_count FROM order_payments GROUP BY payment_type ORDER BY payment_record_count DESC",
+      "rag_source_ids": [
+        "olist_payment_value",
+        "olist_order_count",
+        "olist_sales_revenue"
+      ],
+      "actual_columns": [
+        "payment_type",
+        "payment_record_count"
+      ],
+      "expected_columns": [
+        "payment_type",
+        "payment_count"
+      ],
+      "actual_rows": [
+        [
+          "credit_card",
+          76795
+        ],
+        [
+          "boleto",
+          19784
+        ],
+        [
+          "voucher",
+          5775
+        ],
+        [
+          "debit_card",
+          1529
+        ],
+        [
+          "not_defined",
+          3
+        ]
+      ],
+      "expected_rows": [
+        [
+          "credit_card",
+          76795
+        ],
+        [
+          "boleto",
+          19784
+        ],
+        [
+          "voucher",
+          5775
+        ],
+        [
+          "debit_card",
+          1529
+        ],
+        [
+          "not_defined",
+          3
+        ]
+      ],
+      "tokens": 1631,
+      "latency_seconds": 1.003,
+      "error": null
+    },
+    {
+      "id": "holdout_one_star_review_count",
+      "question": "评分为1星的评价记录一共有多少条？",
+      "passed": true,
+      "strict_passed": true,
+      "answer_passed": true,
+      "columns_passed": true,
+      "database": "olist",
+      "sql": "SELECT COUNT(*) AS review_count FROM order_reviews WHERE review_score = 1",
+      "rag_source_ids": [
+        "olist_review_score",
+        "olist_delivery_delay",
+        "olist_verified_category_revenue"
+      ],
+      "actual_columns": [
+        "review_count"
+      ],
+      "expected_columns": [
+        "review_count"
+      ],
+      "actual_rows": [
+        [
+          11424
+        ]
+      ],
+      "expected_rows": [
+        [
+          11424
+        ]
+      ],
+      "tokens": 1671,
+      "latency_seconds": 0.743,
+      "error": null
+    },
+    {
+      "id": "holdout_average_delivery_days",
+      "question": "对已有实际送达时间的订单，从购买到送达平均需要多少个整天？结果保留两位小数",
+      "passed": true,
+      "strict_passed": true,
+      "answer_passed": true,
+      "columns_passed": true,
+      "database": "olist",
+      "sql": "SELECT ROUND(AVG(DATE_DIFF('DAY', order_purchase_timestamp, order_delivered_customer_date)), 2) AS average_delivery_days FROM orders WHERE NOT order_delivered_customer_date IS NULL",
+      "rag_source_ids": [
+        "olist_delivery_delay",
+        "olist_delivered_orders",
+        "olist_time_range"
+      ],
+      "actual_columns": [
+        "average_delivery_days"
+      ],
+      "expected_columns": [
+        "average_delivery_days"
+      ],
+      "actual_rows": [
+        [
+          12.5
+        ]
+      ],
+      "expected_rows": [
+        [
+          12.5
+        ]
+      ],
+      "tokens": 1790,
+      "latency_seconds": 12.244,
+      "error": null
+    },
+    {
+      "id": "holdout_repeat_customer_count",
+      "question": "按 customer_unique_id 识别客户，有两笔及以上不同订单的客户共有多少位？",
+      "passed": true,
+      "strict_passed": false,
+      "answer_passed": true,
+      "columns_passed": false,
+      "database": "olist",
+      "sql": "SELECT COUNT(*) AS customer_count FROM (SELECT c.customer_unique_id FROM customers AS c JOIN orders AS o ON o.customer_id = c.customer_id GROUP BY c.customer_unique_id HAVING COUNT(DISTINCT o.order_id) >= 2) AS t",
+      "rag_source_ids": [
+        "olist_customer_count",
+        "olist_order_customer_relationship",
+        "olist_order_count"
+      ],
+      "actual_columns": [
+        "customer_count"
+      ],
+      "expected_columns": [
+        "repeat_customer_count"
+      ],
+      "actual_rows": [
+        [
+          2997
+        ]
+      ],
+      "expected_rows": [
+        [
+          2997
+        ]
+      ],
+      "tokens": 1949,
+      "latency_seconds": 2.902,
+      "error": null
+    },
+    {
+      "id": "holdout_multi_item_order_count",
+      "question": "在 order_items 中包含两条及以上商品记录的订单共有多少笔？",
+      "passed": true,
+      "strict_passed": false,
+      "answer_passed": true,
+      "columns_passed": false,
+      "database": "olist",
+      "sql": "SELECT COUNT(*) AS order_count FROM (SELECT order_id FROM order_items GROUP BY order_id HAVING COUNT(*) >= 2) AS multi_item_orders",
+      "rag_source_ids": [
+        "olist_order_count",
+        "olist_order_item_relationship",
+        "olist_sales_revenue"
+      ],
+      "actual_columns": [
+        "order_count"
+      ],
+      "expected_columns": [
+        "multi_item_order_count"
+      ],
+      "actual_rows": [
+        [
+          9803
+        ]
+      ],
+      "expected_rows": [
+        [
+          9803
+        ]
+      ],
+      "tokens": 1800,
+      "latency_seconds": 1.984,
+      "error": null
+    },
+    {
+      "id": "holdout_november_2017_order_count",
+      "question": "2017年11月一共有多少笔订单？",
+      "passed": true,
+      "strict_passed": true,
+      "answer_passed": true,
+      "columns_passed": true,
+      "database": "olist",
+      "sql": "SELECT COUNT(DISTINCT order_id) AS order_count FROM orders WHERE order_purchase_timestamp >= '2017-11-01' AND order_purchase_timestamp < '2017-12-01'",
+      "rag_source_ids": [
+        "olist_order_count",
+        "olist_verified_monthly_orders",
+        "olist_time_range"
+      ],
+      "actual_columns": [
+        "order_count"
+      ],
+      "expected_columns": [
+        "order_count"
+      ],
+      "actual_rows": [
+        [
+          7544
+        ]
+      ],
+      "expected_rows": [
+        [
+          7544
+        ]
+      ],
+      "tokens": 1714,
+      "latency_seconds": 1.412,
+      "error": null
+    },
+    {
+      "id": "holdout_top_three_seller_states",
+      "question": "按卖家所在州汇总商品销售额，返回销售额最高的三个州并降序排列，销售额保留两位小数",
+      "passed": true,
+      "strict_passed": true,
+      "answer_passed": true,
+      "columns_passed": true,
+      "database": "olist",
+      "sql": "SELECT s.seller_state, ROUND(SUM(oi.price), 2) AS total_revenue FROM order_items AS oi JOIN sellers AS s ON oi.seller_id = s.seller_id GROUP BY s.seller_state ORDER BY total_revenue DESC LIMIT 3",
+      "rag_source_ids": [
+        "olist_verified_state_revenue",
+        "olist_sales_revenue",
+        "olist_verified_category_revenue"
+      ],
+      "actual_columns": [
+        "seller_state",
+        "total_revenue"
+      ],
+      "expected_columns": [
+        "seller_state",
+        "total_revenue"
+      ],
+      "actual_rows": [
+        [
+          "SP",
+          8753396.21
+        ],
+        [
+          "PR",
+          1261887.21
+        ],
+        [
+          "MG",
+          1011564.74
+        ]
+      ],
+      "expected_rows": [
+        [
+          "SP",
+          8753396.21
+        ],
+        [
+          "PR",
+          1261887.21
+        ],
+        [
+          "MG",
+          1011564.74
+        ]
+      ],
+      "tokens": 1991,
+      "latency_seconds": 2.461,
+      "error": null
+    },
+    {
+      "id": "holdout_five_star_percentage",
+      "question": "所有评价记录中5星评价占百分之多少？结果保留两位小数",
+      "passed": true,
+      "strict_passed": false,
+      "answer_passed": true,
+      "columns_passed": false,
+      "database": "olist",
+      "sql": "SELECT ROUND(100.0 * COUNT(CASE WHEN review_score = 5 THEN 1 END) / COUNT(*), 2) AS five_star_review_percentage FROM order_reviews",
+      "rag_source_ids": [
+        "olist_review_score",
+        "olist_sales_revenue",
+        "olist_delivery_delay"
+      ],
+      "actual_columns": [
+        "five_star_review_percentage"
+      ],
+      "expected_columns": [
+        "five_star_percentage"
+      ],
+      "actual_rows": [
+        [
+          57.78
+        ]
+      ],
+      "expected_rows": [
+        [
+          57.78
+        ]
+      ],
+      "tokens": 1827,
+      "latency_seconds": 1.922,
+      "error": null
+    }
+  ]
+}

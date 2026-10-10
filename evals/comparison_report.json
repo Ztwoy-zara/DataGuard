@@ -1,0 +1,349 @@
+{
+  "evaluated_at": "2026-10-10T07:46:44.448876+00:00",
+  "baseline": {
+    "total_cases": 5,
+    "answer_accuracy": 0.4,
+    "column_accuracy": 0.4,
+    "total_input_tokens": 675,
+    "total_output_tokens": 314,
+    "total_tokens": 989,
+    "average_tokens": 197.8,
+    "average_latency_seconds": 1.059
+  },
+  "agent": {
+    "total_cases": 5,
+    "answer_accuracy": 1.0,
+    "column_accuracy": 1.0,
+    "total_input_tokens": 3243,
+    "total_output_tokens": 502,
+    "total_tokens": 3745,
+    "average_tokens": 749.0,
+    "average_latency_seconds": 0.959
+  },
+  "comparison": {
+    "answer_accuracy_gain": 0.6,
+    "column_accuracy_gain": 0.6,
+    "token_change_percent": 278.67,
+    "latency_change_percent": -9.44
+  },
+  "results": [
+    {
+      "id": "total_by_customer",
+      "question": "每位客户的消费总额是多少？按金额从高到低排序",
+      "expected_columns": [
+        "name",
+        "total_amount"
+      ],
+      "expected_rows": [
+        [
+          "王五",
+          899.0
+        ],
+        [
+          "张三",
+          898.0
+        ],
+        [
+          "李四",
+          199.0
+        ]
+      ],
+      "baseline": {
+        "passed": false,
+        "columns_passed": false,
+        "sql": "SELECT c.id, c.name, COALESCE(SUM(o.amount), 0) AS total_amount FROM customers AS c LEFT JOIN orders AS o ON c.id = o.customer_id GROUP BY c.id, c.name ORDER BY total_amount DESC",
+        "actual_rows": [
+          [
+            3,
+            "王五",
+            899.0
+          ],
+          [
+            1,
+            "张三",
+            898.0
+          ],
+          [
+            2,
+            "李四",
+            199.0
+          ]
+        ],
+        "input_tokens": 230,
+        "output_tokens": 277,
+        "total_tokens": 507,
+        "latency_seconds": 2.132,
+        "error": null
+      },
+      "agent": {
+        "passed": true,
+        "columns_passed": true,
+        "sql": "SELECT c.name, ROUND(SUM(o.amount), 2) AS total_amount FROM customers AS c JOIN orders AS o ON c.id = o.customer_id GROUP BY c.name ORDER BY total_amount DESC",
+        "actual_rows": [
+          [
+            "王五",
+            899.0
+          ],
+          [
+            "张三",
+            898.0
+          ],
+          [
+            "李四",
+            199.0
+          ]
+        ],
+        "input_tokens": 669,
+        "output_tokens": 80,
+        "total_tokens": 749,
+        "latency_seconds": 1.077,
+        "rag_sources": [
+          {
+            "id": "metric_customer_spend",
+            "title": "客户消费总额",
+            "score": 0.706
+          },
+          {
+            "id": "verified_sql_customer_total",
+            "title": "已验证SQL：客户消费总额",
+            "score": 0.6604
+          },
+          {
+            "id": "metric_sales_amount",
+            "title": "销售额和订单总金额",
+            "score": 0.623
+          }
+        ],
+        "error": null
+      }
+    },
+    {
+      "id": "beijing_customers",
+      "question": "北京有哪些客户？",
+      "expected_columns": [
+        "name"
+      ],
+      "expected_rows": [
+        [
+          "李四"
+        ]
+      ],
+      "baseline": {
+        "passed": false,
+        "columns_passed": false,
+        "sql": null,
+        "actual_rows": null,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "total_tokens": 0,
+        "latency_seconds": 0.508,
+        "error": "Client error '403 Forbidden' for url 'http://127.0.0.1:8000/query'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403"
+      },
+      "agent": {
+        "passed": true,
+        "columns_passed": true,
+        "sql": "SELECT name FROM customers WHERE city = '北京'",
+        "actual_rows": [
+          [
+            "李四"
+          ]
+        ],
+        "input_tokens": 634,
+        "output_tokens": 116,
+        "total_tokens": 750,
+        "latency_seconds": 1.218,
+        "rag_sources": [
+          {
+            "id": "metric_active_customer",
+            "title": "活跃客户",
+            "score": 0.5055
+          },
+          {
+            "id": "metric_customer_spend",
+            "title": "客户消费总额",
+            "score": 0.4919
+          },
+          {
+            "id": "dimension_region",
+            "title": "地区口径",
+            "score": 0.4732
+          }
+        ],
+        "error": null
+      }
+    },
+    {
+      "id": "order_count",
+      "question": "一共有多少笔订单？",
+      "expected_columns": [
+        "order_count"
+      ],
+      "expected_rows": [
+        [
+          4
+        ]
+      ],
+      "baseline": {
+        "passed": true,
+        "columns_passed": true,
+        "sql": "SELECT COUNT(*) AS order_count FROM orders",
+        "actual_rows": [
+          [
+            4
+          ]
+        ],
+        "input_tokens": 221,
+        "output_tokens": 17,
+        "total_tokens": 238,
+        "latency_seconds": 0.64,
+        "error": null
+      },
+      "agent": {
+        "passed": true,
+        "columns_passed": true,
+        "sql": "SELECT COUNT(*) AS order_count FROM orders",
+        "actual_rows": [
+          [
+            4
+          ]
+        ],
+        "input_tokens": 644,
+        "output_tokens": 33,
+        "total_tokens": 677,
+        "latency_seconds": 0.475,
+        "rag_sources": [
+          {
+            "id": "metric_order_count",
+            "title": "订单数量",
+            "score": 0.5996
+          },
+          {
+            "id": "verified_sql_month_total",
+            "title": "已验证SQL：月度订单总额",
+            "score": 0.4714
+          },
+          {
+            "id": "metric_sales_amount",
+            "title": "销售额和订单总金额",
+            "score": 0.4542
+          }
+        ],
+        "error": null
+      }
+    },
+    {
+      "id": "max_order",
+      "question": "金额最高的一笔订单是多少钱？",
+      "expected_columns": [
+        "max_amount"
+      ],
+      "expected_rows": [
+        [
+          899.0
+        ]
+      ],
+      "baseline": {
+        "passed": true,
+        "columns_passed": true,
+        "sql": "SELECT MAX(amount) AS max_amount FROM orders",
+        "actual_rows": [
+          [
+            899.0
+          ]
+        ],
+        "input_tokens": 224,
+        "output_tokens": 20,
+        "total_tokens": 244,
+        "latency_seconds": 0.836,
+        "error": null
+      },
+      "agent": {
+        "passed": true,
+        "columns_passed": true,
+        "sql": "SELECT ROUND(MAX(amount), 2) AS max_amount FROM orders",
+        "actual_rows": [
+          [
+            899.0
+          ]
+        ],
+        "input_tokens": 647,
+        "output_tokens": 164,
+        "total_tokens": 811,
+        "latency_seconds": 1.062,
+        "rag_sources": [
+          {
+            "id": "metric_sales_amount",
+            "title": "销售额和订单总金额",
+            "score": 0.535
+          },
+          {
+            "id": "metric_order_count",
+            "title": "订单数量",
+            "score": 0.4951
+          },
+          {
+            "id": "verified_sql_month_total",
+            "title": "已验证SQL：月度订单总额",
+            "score": 0.4674
+          }
+        ],
+        "error": null
+      }
+    },
+    {
+      "id": "september_sales",
+      "question": "2026年9月的订单总金额是多少？",
+      "expected_columns": [
+        "total_amount"
+      ],
+      "expected_rows": [
+        [
+          1097.0
+        ]
+      ],
+      "baseline": {
+        "passed": false,
+        "columns_passed": false,
+        "sql": null,
+        "actual_rows": null,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "total_tokens": 0,
+        "latency_seconds": 1.18,
+        "error": "Unterminated string starting at: line 1 column 9 (char 8)"
+      },
+      "agent": {
+        "passed": true,
+        "columns_passed": true,
+        "sql": "SELECT ROUND(SUM(amount), 2) AS total_amount FROM orders WHERE order_date >= '2026-09-01' AND order_date < '2026-10-01'",
+        "actual_rows": [
+          [
+            1097.0
+          ]
+        ],
+        "input_tokens": 649,
+        "output_tokens": 109,
+        "total_tokens": 758,
+        "latency_seconds": 0.961,
+        "rag_sources": [
+          {
+            "id": "verified_sql_month_total",
+            "title": "已验证SQL：月度订单总额",
+            "score": 0.569
+          },
+          {
+            "id": "metric_sales_amount",
+            "title": "销售额和订单总金额",
+            "score": 0.5178
+          },
+          {
+            "id": "metric_order_count",
+            "title": "订单数量",
+            "score": 0.4932
+          }
+        ],
+        "error": null
+      }
+    }
+  ]
+}

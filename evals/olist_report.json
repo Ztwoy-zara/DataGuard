@@ -1,0 +1,385 @@
+{
+  "summary": {
+    "evaluated_at": "2026-10-10T07:43:42.615406+00:00",
+    "database": "olist",
+    "total_cases": 9,
+    "passed_cases": 9,
+    "overall_accuracy": 1.0,
+    "answer_accuracy": 1.0,
+    "column_accuracy": 1.0,
+    "total_tokens": 14596,
+    "average_tokens": 1621.7777777777778,
+    "average_latency_seconds": 0.968
+  },
+  "results": [
+    {
+      "id": "olist_order_count",
+      "question": "Olist 数据库一共有多少笔订单？",
+      "passed": true,
+      "answer_passed": true,
+      "columns_passed": true,
+      "database": "olist",
+      "sql": "SELECT COUNT(DISTINCT order_id) AS order_count FROM orders",
+      "rag_source_ids": [
+        "olist_order_count",
+        "olist_sales_revenue",
+        "olist_customer_count"
+      ],
+      "actual_columns": [
+        "order_count"
+      ],
+      "expected_columns": [
+        "order_count"
+      ],
+      "actual_rows": [
+        [
+          99441
+        ]
+      ],
+      "expected_rows": [
+        [
+          99441
+        ]
+      ],
+      "tokens": 1565,
+      "latency_seconds": 0.842,
+      "error": null
+    },
+    {
+      "id": "olist_unique_customer_count",
+      "question": "Olist 一共有多少位独立客户？",
+      "passed": true,
+      "answer_passed": true,
+      "columns_passed": true,
+      "database": "olist",
+      "sql": "SELECT COUNT(DISTINCT customer_unique_id) AS customer_count FROM customers",
+      "rag_source_ids": [
+        "olist_customer_count",
+        "olist_sales_revenue",
+        "olist_order_count"
+      ],
+      "actual_columns": [
+        "customer_count"
+      ],
+      "expected_columns": [
+        "customer_count"
+      ],
+      "actual_rows": [
+        [
+          96096
+        ]
+      ],
+      "expected_rows": [
+        [
+          96096
+        ]
+      ],
+      "tokens": 1567,
+      "latency_seconds": 0.827,
+      "error": null
+    },
+    {
+      "id": "olist_delivered_order_count",
+      "question": "一共有多少笔已经送达的订单？",
+      "passed": true,
+      "answer_passed": true,
+      "columns_passed": true,
+      "database": "olist",
+      "sql": "SELECT COUNT(DISTINCT order_id) AS order_count FROM orders WHERE order_status = 'delivered'",
+      "rag_source_ids": [
+        "olist_delivered_orders",
+        "olist_order_count",
+        "olist_order_item_relationship"
+      ],
+      "actual_columns": [
+        "order_count"
+      ],
+      "expected_columns": [
+        "order_count"
+      ],
+      "actual_rows": [
+        [
+          96478
+        ]
+      ],
+      "expected_rows": [
+        [
+          96478
+        ]
+      ],
+      "tokens": 1547,
+      "latency_seconds": 1.138,
+      "error": null
+    },
+    {
+      "id": "olist_total_revenue",
+      "question": "所有订单商品的销售总额是多少？不包含运费",
+      "passed": true,
+      "answer_passed": true,
+      "columns_passed": true,
+      "database": "olist",
+      "sql": "SELECT ROUND(SUM(oi.price), 2) AS total_revenue FROM order_items AS oi",
+      "rag_source_ids": [
+        "olist_sales_revenue",
+        "olist_freight_value",
+        "olist_verified_category_revenue"
+      ],
+      "actual_columns": [
+        "total_revenue"
+      ],
+      "expected_columns": [
+        "total_revenue"
+      ],
+      "actual_rows": [
+        [
+          13591643.7
+        ]
+      ],
+      "expected_rows": [
+        [
+          13591643.7
+        ]
+      ],
+      "tokens": 1620,
+      "latency_seconds": 0.833,
+      "error": null
+    },
+    {
+      "id": "olist_top_five_states",
+      "question": "按客户所在州汇总销售额，返回销售额最高的五个州，并按销售额降序排列",
+      "passed": true,
+      "answer_passed": true,
+      "columns_passed": true,
+      "database": "olist",
+      "sql": "SELECT c.customer_state AS customer_state, ROUND(SUM(oi.price), 2) AS total_revenue FROM orders AS o JOIN customers AS c ON o.customer_id = c.customer_id JOIN order_items AS oi ON o.order_id = oi.order_id GROUP BY c.customer_state ORDER BY total_revenue DESC LIMIT 5",
+      "rag_source_ids": [
+        "olist_verified_state_revenue",
+        "olist_sales_revenue",
+        "olist_verified_category_revenue"
+      ],
+      "actual_columns": [
+        "customer_state",
+        "total_revenue"
+      ],
+      "expected_columns": [
+        "customer_state",
+        "total_revenue"
+      ],
+      "actual_rows": [
+        [
+          "SP",
+          5202955.05
+        ],
+        [
+          "RJ",
+          1824092.67
+        ],
+        [
+          "MG",
+          1585308.03
+        ],
+        [
+          "RS",
+          750304.02
+        ],
+        [
+          "PR",
+          683083.76
+        ]
+      ],
+      "expected_rows": [
+        [
+          "SP",
+          5202955.05
+        ],
+        [
+          "RJ",
+          1824092.67
+        ],
+        [
+          "MG",
+          1585308.03
+        ],
+        [
+          "RS",
+          750304.02
+        ],
+        [
+          "PR",
+          683083.76
+        ]
+      ],
+      "tokens": 1727,
+      "latency_seconds": 1.148,
+      "error": null
+    },
+    {
+      "id": "olist_average_review_score",
+      "question": "所有订单评价的平均评分是多少？结果保留两位小数",
+      "passed": true,
+      "answer_passed": true,
+      "columns_passed": true,
+      "database": "olist",
+      "sql": "SELECT ROUND(AVG(review_score), 2) AS average_review_score FROM order_reviews",
+      "rag_source_ids": [
+        "olist_review_score",
+        "olist_order_count",
+        "olist_delivered_orders"
+      ],
+      "actual_columns": [
+        "average_review_score"
+      ],
+      "expected_columns": [
+        "average_review_score"
+      ],
+      "actual_rows": [
+        [
+          4.09
+        ]
+      ],
+      "expected_rows": [
+        [
+          4.09
+        ]
+      ],
+      "tokens": 1566,
+      "latency_seconds": 0.776,
+      "error": null
+    },
+    {
+      "id": "olist_delayed_order_count",
+      "question": "实际送达时间晚于预计送达时间的订单有多少笔？",
+      "passed": true,
+      "answer_passed": true,
+      "columns_passed": true,
+      "database": "olist",
+      "sql": "SELECT COUNT(DISTINCT order_id) AS delayed_order_count FROM orders WHERE order_status = 'delivered' AND order_delivered_customer_date > order_estimated_delivery_date",
+      "rag_source_ids": [
+        "olist_delivery_delay",
+        "olist_delivered_orders",
+        "olist_time_range"
+      ],
+      "actual_columns": [
+        "delayed_order_count"
+      ],
+      "expected_columns": [
+        "delayed_order_count"
+      ],
+      "actual_rows": [
+        [
+          7826
+        ]
+      ],
+      "expected_rows": [
+        [
+          7826
+        ]
+      ],
+      "tokens": 1620,
+      "latency_seconds": 1.032,
+      "error": null
+    },
+    {
+      "id": "olist_august_2018_orders",
+      "question": "2018年8月一共有多少笔订单？",
+      "passed": true,
+      "answer_passed": true,
+      "columns_passed": true,
+      "database": "olist",
+      "sql": "SELECT COUNT(DISTINCT order_id) AS order_count FROM orders WHERE order_purchase_timestamp >= CAST('2018-08-01' AS TIMESTAMP) AND order_purchase_timestamp < CAST('2018-09-01' AS TIMESTAMP)",
+      "rag_source_ids": [
+        "olist_order_count",
+        "olist_verified_monthly_orders",
+        "olist_time_range"
+      ],
+      "actual_columns": [
+        "order_count"
+      ],
+      "expected_columns": [
+        "order_count"
+      ],
+      "actual_rows": [
+        [
+          6512
+        ]
+      ],
+      "expected_rows": [
+        [
+          6512
+        ]
+      ],
+      "tokens": 1721,
+      "latency_seconds": 1.044,
+      "error": null
+    },
+    {
+      "id": "olist_top_five_categories",
+      "question": "销售额最高的五个英文商品品类是什么？按销售额降序排列",
+      "passed": true,
+      "answer_passed": true,
+      "columns_passed": true,
+      "database": "olist",
+      "sql": "SELECT t.product_category_name_english AS category, ROUND(SUM(oi.price), 2) AS total_revenue FROM order_items AS oi JOIN products AS p ON oi.product_id = p.product_id LEFT JOIN product_category_translation AS t ON p.product_category_name = t.product_category_name GROUP BY t.product_category_name_english ORDER BY total_revenue DESC LIMIT 5",
+      "rag_source_ids": [
+        "olist_verified_category_revenue",
+        "olist_sales_revenue",
+        "olist_product_category"
+      ],
+      "actual_columns": [
+        "category",
+        "total_revenue"
+      ],
+      "expected_columns": [
+        "category",
+        "total_revenue"
+      ],
+      "actual_rows": [
+        [
+          "health_beauty",
+          1258681.34
+        ],
+        [
+          "watches_gifts",
+          1205005.68
+        ],
+        [
+          "bed_bath_table",
+          1036988.68
+        ],
+        [
+          "sports_leisure",
+          988048.97
+        ],
+        [
+          "computers_accessories",
+          911954.32
+        ]
+      ],
+      "expected_rows": [
+        [
+          "health_beauty",
+          1258681.34
+        ],
+        [
+          "watches_gifts",
+          1205005.68
+        ],
+        [
+          "bed_bath_table",
+          1036988.68
+        ],
+        [
+          "sports_leisure",
+          988048.97
+        ],
+        [
+          "computers_accessories",
+          911954.32
+        ]
+      ],
+      "tokens": 1663,
+      "latency_seconds": 1.072,
+      "error": null
+    }
+  ]
+}

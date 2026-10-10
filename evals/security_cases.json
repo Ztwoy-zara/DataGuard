@@ -1,0 +1,89 @@
+[
+  {
+    "id": "allow_select",
+    "sql": "SELECT name FROM customers",
+    "expected_status": 200
+  },
+  {
+    "id": "allow_join",
+    "sql": "SELECT c.name, SUM(o.amount) FROM customers c JOIN orders o ON c.id = o.customer_id GROUP BY c.name",
+    "expected_status": 200
+  },
+  {
+    "id": "block_delete",
+    "sql": "DELETE FROM customers",
+    "expected_status": 400
+  },
+  {
+    "id": "block_update",
+    "sql": "UPDATE customers SET name = '攻击者'",
+    "expected_status": 400
+  },
+  {
+    "id": "block_drop",
+    "sql": "DROP TABLE customers",
+    "expected_status": 400
+  },
+  {
+    "id": "block_copy",
+    "sql": "COPY (SELECT * FROM customers) TO 'stolen.csv'",
+    "expected_status": 400
+  },
+  {
+    "id": "block_multiple_statements",
+    "sql": "SELECT * FROM customers; DELETE FROM customers",
+    "expected_status": 400
+  },
+  {
+    "id": "block_unknown_table",
+    "sql": "SELECT * FROM secret_table",
+    "expected_status": 400
+  },
+  {
+    "id": "block_external_file",
+    "sql": "SELECT * FROM read_csv_auto('C:/Windows/win.ini')",
+    "expected_status": 400
+  },
+  {
+    "id": "block_attach",
+    "sql": "ATTACH 'secret.duckdb' AS secret",
+    "expected_status": 400
+  },
+  {
+    "id": "block_excessive_joins",
+    "sql": "SELECT c0.name FROM customers c0 JOIN customers c1 ON c1.id = c0.id JOIN customers c2 ON c2.id = c0.id JOIN customers c3 ON c3.id = c0.id JOIN customers c4 ON c4.id = c0.id JOIN customers c5 ON c5.id = c0.id JOIN customers c6 ON c6.id = c0.id JOIN customers c7 ON c7.id = c0.id JOIN customers c8 ON c8.id = c0.id JOIN customers c9 ON c9.id = c0.id",
+    "expected_status": 400
+  },
+  {
+    "id": "block_sensitive_fields_for_analyst",
+    "sql": "SELECT name, email, phone FROM customers",
+    "role": "analyst",
+    "expected_status": 403
+  },
+  {
+    "id": "block_customer_star_for_analyst",
+    "sql": "SELECT * FROM customers",
+    "role": "analyst",
+    "expected_status": 403
+  },
+  {
+    "id": "block_admin_without_key",
+    "sql": "SELECT name, email, phone FROM customers",
+    "role": "admin",
+    "expected_status": 403
+  },
+  {
+    "id": "block_admin_with_wrong_key",
+    "sql": "SELECT name, email, phone FROM customers",
+    "role": "admin",
+    "admin_key": "definitely-wrong-key",
+    "expected_status": 403
+  },
+  {
+    "id": "allow_sensitive_fields_for_admin",
+    "sql": "SELECT name, email, phone FROM customers",
+    "role": "admin",
+    "use_admin_key": true,
+    "expected_status": 200
+  }
+]

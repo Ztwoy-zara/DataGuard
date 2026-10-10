@@ -1,0 +1,82 @@
+[
+  {
+    "id": "olist_order_count",
+    "question": "Olist 数据库一共有多少笔订单？",
+    "expected_columns": ["order_count"],
+    "expected_rows": [
+      [99441]
+    ]
+  },
+  {
+    "id": "olist_unique_customer_count",
+    "question": "Olist 一共有多少位独立客户？",
+    "expected_columns": ["customer_count"],
+    "expected_rows": [
+      [96096]
+    ]
+  },
+  {
+    "id": "olist_delivered_order_count",
+    "question": "一共有多少笔已经送达的订单？",
+    "expected_columns": ["order_count"],
+    "expected_rows": [
+      [96478]
+    ]
+  },
+  {
+    "id": "olist_total_revenue",
+    "question": "所有订单商品的销售总额是多少？不包含运费",
+    "expected_columns": ["total_revenue"],
+    "expected_rows": [
+      [13591643.7]
+    ]
+  },
+  {
+    "id": "olist_top_five_states",
+    "question": "按客户所在州汇总销售额，返回销售额最高的五个州，并按销售额降序排列",
+    "expected_columns": ["customer_state", "total_revenue"],
+    "expected_rows": [
+      ["SP", 5202955.05],
+      ["RJ", 1824092.67],
+      ["MG", 1585308.03],
+      ["RS", 750304.02],
+      ["PR", 683083.76]
+    ]
+  },
+  {
+    "id": "olist_average_review_score",
+    "question": "所有订单评价的平均评分是多少？结果保留两位小数",
+    "expected_columns": ["average_review_score"],
+    "expected_rows": [
+      [4.09]
+    ]
+  },
+  {
+    "id": "olist_delayed_order_count",
+    "question": "实际送达时间晚于预计送达时间的订单有多少笔？",
+    "expected_columns": ["delayed_order_count"],
+    "expected_rows": [
+      [7826]
+    ]
+  },
+  {
+    "id": "olist_august_2018_orders",
+    "question": "2018年8月一共有多少笔订单？",
+    "expected_columns": ["order_count"],
+    "expected_rows": [
+      [6512]
+    ]
+  },
+  {
+    "id": "olist_top_five_categories",
+    "question": "销售额最高的五个英文商品品类是什么？按销售额降序排列",
+    "expected_columns": ["category", "total_revenue"],
+    "expected_rows": [
+      ["health_beauty", 1258681.34],
+      ["watches_gifts", 1205005.68],
+      ["bed_bath_table", 1036988.68],
+      ["sports_leisure", 988048.97],
+      ["computers_accessories", 911954.32]
+    ]
+  }
+]

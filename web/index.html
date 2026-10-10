@@ -1,0 +1,536 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DataGuard｜中文数据分析 Agent</title>
+
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #07111f;
+      --panel: #101d2e;
+      --panel-light: #16263a;
+      --border: #29405a;
+      --text: #eef6ff;
+      --muted: #94a8bd;
+      --primary: #35d0ba;
+      --primary-dark: #173f42;
+      --danger: #ff6b7a;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Inter, "Microsoft YaHei", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 20% 0%, #12314a 0, transparent 35%),
+        var(--bg);
+    }
+
+    main {
+      width: min(1100px, calc(100% - 32px));
+      margin: auto;
+      padding: 48px 0;
+    }
+
+    header {
+      margin-bottom: 30px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 6px 12px;
+      color: var(--primary);
+      background: var(--primary-dark);
+      border: 1px solid #286d69;
+      border-radius: 999px;
+      font-size: 13px;
+    }
+
+    h1 {
+      margin: 14px 0 8px;
+      font-size: clamp(32px, 6vw, 58px);
+      letter-spacing: -2px;
+    }
+
+    header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 17px;
+    }
+
+    .dashboard-link {
+      display: inline-block;
+      margin-top: 14px;
+      padding: 9px 13px;
+      color: var(--primary);
+      text-decoration: none;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+    }
+
+    .dashboard-link:hover {
+      border-color: var(--primary);
+    }
+
+    .card {
+      padding: 24px;
+      background: rgba(16, 29, 46, 0.92);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: 0 22px 60px rgba(0, 0, 0, 0.28);
+    }
+
+    form {
+      display: flex;
+      gap: 12px;
+    }
+
+    input {
+      flex: 1;
+      min-width: 0;
+      padding: 15px 17px;
+      color: var(--text);
+      background: var(--panel-light);
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      font: inherit;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(53, 208, 186, 0.12);
+    }
+    select {
+      width: 130px;
+      padding: 15px 12px;
+      color: var(--text);
+      background: var(--panel-light);
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      font: inherit;
+      outline: none;
+    }
+
+    #database {
+      width: 190px;
+    }
+
+    select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(53, 208, 186, 0.12);
+    }
+
+    button {
+      padding: 0 24px;
+      color: #05201d;
+      background: var(--primary);
+      border: 0;
+      border-radius: 11px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      opacity: 0.55;
+      cursor: wait;
+    }
+
+    .examples {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .example {
+      padding: 8px 12px;
+      color: var(--muted);
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 400;
+    }
+
+    .example:hover {
+      color: var(--text);
+      border-color: var(--primary);
+    }
+
+    #status {
+      min-height: 24px;
+      margin: 18px 2px 0;
+      color: var(--muted);
+    }
+
+    #status.error {
+      color: var(--danger);
+    }
+
+    #status.clarification {
+      color: #f4c76b;
+    }
+
+    #result {
+      display: none;
+      margin-top: 22px;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .metric {
+      padding: 16px;
+      background: var(--panel-light);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+
+    .metric span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .metric strong {
+      display: block;
+      margin-top: 7px;
+      font-size: 20px;
+    }
+
+    .section-title {
+      margin: 22px 0 10px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .explanation {
+      line-height: 1.75;
+    }
+
+    pre {
+      overflow-x: auto;
+      margin: 0;
+      padding: 16px;
+      color: #9eeedd;
+      background: #07101c;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      white-space: pre-wrap;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      padding: 13px 15px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+      white-space: nowrap;
+    }
+
+    th {
+      color: var(--primary);
+      background: #0c1726;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .rag-sources {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    }
+
+    .rag-source {
+    padding: 8px 11px;
+    color: var(--primary);
+    background: var(--primary-dark);
+    border: 1px solid #286d69;
+    border-radius: 10px;
+    font-size: 13px;
+    }
+
+    @media (max-width: 700px) {
+      form {
+        flex-direction: column;
+      }
+
+      button[type="submit"] {
+        min-height: 48px;
+      }
+
+      .metrics {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main>
+    <header>
+      <span class="badge">READ-ONLY · RAG · SQL SAFETY · EVALUATED</span>
+      <h1>DataGuard</h1>
+      <p>安全、可解释、可评测的中文数据分析 Agent</p>
+      <a class="dashboard-link" href="/evals">
+        查看评测 Dashboard →
+      </a>
+    </header>
+
+    <section class="card">
+      <form id="question-form">
+        <input
+          id="question"
+          autocomplete="off"
+          placeholder="例如：每位客户的消费总额是多少？"
+          required
+        >
+        <select id="database" aria-label="选择数据集">
+          <option value="demo">Demo 演示数据</option>
+          <option value="olist">Olist 电商数据</option>
+        </select>
+        <select id="role" aria-label="选择角色">
+          <option value="analyst">分析员</option>
+        </select>
+        <button id="submit-button" type="submit">开始分析</button>
+      </form>
+
+      <div class="examples">
+        <button class="example" type="button">每位客户的消费总额是多少？</button>
+        <button class="example" type="button">北京有哪些客户？</button>
+        <button class="example" type="button">2026年9月的订单总金额是多少？</button>
+      </div>
+
+      <div id="status"></div>
+
+      <section id="result">
+        <div class="metrics">
+          <div class="metric">
+            <span>返回行数</span>
+            <strong id="row-count">0</strong>
+          </div>
+          <div class="metric">
+            <span>Token 用量</span>
+            <strong id="token-count">0</strong>
+          </div>
+          <div class="metric">
+            <span>安全模式</span>
+            <strong id="safety-status">只读</strong>
+          </div>
+        </div>
+
+        <h2 class="section-title">分析说明</h2>
+        <div id="explanation" class="explanation"></div>
+
+        <h2 class="section-title">RAG 知识来源</h2>
+        <div id="rag-sources" class="rag-sources"></div>
+
+        <h2 class="section-title">查询结果</h2>
+        <div class="table-wrap">
+          <table>
+            <thead id="table-head"></thead>
+            <tbody id="table-body"></tbody>
+          </table>
+        </div>
+
+        <h2 class="section-title">生成的 SQL</h2>
+        <pre id="sql"></pre>
+      </section>
+    </section>
+  </main>
+
+  <script>
+    const form = document.querySelector("#question-form");
+    const questionInput = document.querySelector("#question");
+    const databaseSelect = document.querySelector("#database");
+    const roleSelect = document.querySelector("#role");
+    const submitButton = document.querySelector("#submit-button");
+    const statusBox = document.querySelector("#status");
+    const resultBox = document.querySelector("#result");
+    const exampleQuestions = {
+      demo: [
+        "每位客户的消费总额是多少？",
+        "北京有哪些客户？",
+        "2026年9月的订单总金额是多少？"
+      ],
+      olist: [
+        "统计各州销售额，按销售额从高到低排序",
+        "统计各商品品类的销售额，按销售额降序排列",
+        "统计每个月的订单数量变化趋势"
+      ]
+    };
+
+    function updateDatasetExamples() {
+      const questions =
+        exampleQuestions[databaseSelect.value];
+
+      questionInput.placeholder = `例如：${questions[0]}`;
+
+      document
+        .querySelectorAll(".example")
+        .forEach((button, index) => {
+          button.textContent = questions[index];
+        });
+    }
+
+    databaseSelect.addEventListener("change", () => {
+      updateDatasetExamples();
+      questionInput.value = "";
+      statusBox.textContent = "";
+      resultBox.style.display = "none";
+      questionInput.focus();
+    });
+
+    updateDatasetExamples();
+
+    document.querySelectorAll(".example").forEach((button) => {
+      button.addEventListener("click", () => {
+        questionInput.value = button.textContent;
+        questionInput.focus();
+      });
+    });
+
+    function renderRagSources(sources) {
+    const container = document.querySelector("#rag-sources");
+    container.replaceChildren();
+
+    (sources || []).forEach((source) => {
+        const item = document.createElement("span");
+        item.className = "rag-source";
+        item.textContent =
+        `${source.title} · 相似度 ${source.score.toFixed(3)}`;
+        container.appendChild(item);
+    });
+
+    if (!sources?.length) {
+        container.textContent = "未检索到相关知识";
+    }
+    }
+
+    function renderTable(columns, rows) {
+      const head = document.querySelector("#table-head");
+      const body = document.querySelector("#table-body");
+
+      head.replaceChildren();
+      body.replaceChildren();
+
+      const headerRow = document.createElement("tr");
+
+      columns.forEach((column) => {
+        const cell = document.createElement("th");
+        cell.textContent = column;
+        headerRow.appendChild(cell);
+      });
+
+      head.appendChild(headerRow);
+
+      rows.forEach((row) => {
+        const tableRow = document.createElement("tr");
+
+        row.forEach((value) => {
+          const cell = document.createElement("td");
+          cell.textContent = value ?? "null";
+          tableRow.appendChild(cell);
+        });
+
+        body.appendChild(tableRow);
+      });
+    }
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      statusBox.className = "";
+      statusBox.textContent = "Agent 正在生成并校验 SQL……";
+      resultBox.style.display = "none";
+      submitButton.disabled = true;
+
+      try {
+        const response = await fetch("/ask", {
+          method: "POST",
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify({
+            question: questionInput.value.trim(),
+            role: roleSelect.value,
+            database: databaseSelect.value
+          })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          const detail = data.detail;
+
+          if (typeof detail === "string") {
+            throw new Error(detail);
+          }
+
+          if (detail?.message) {
+            const fields = detail.fields?.join("、");
+            const suffix = fields ? `：${fields}` : "";
+            throw new Error(`${detail.message}${suffix}`);
+          }
+
+          throw new Error("请求失败");
+        }
+
+        if (data.status === "needs_clarification") {
+          statusBox.className = "clarification";
+          statusBox.textContent =
+            `需要补充信息：${data.clarification_question}`;
+          questionInput.focus();
+          return;
+        }
+
+        document.querySelector("#row-count").textContent = data.row_count;
+        document.querySelector("#token-count").textContent =
+          data.token_usage.total_tokens;
+        const roleLabel =
+          data.safety.role === "admin" ? "管理员" : "分析员";
+
+        document.querySelector("#safety-status").textContent =
+          data.safety.read_only
+            ? `${roleLabel} · 只读 ✓`
+            : `${roleLabel} · 未知`;
+        document.querySelector("#explanation").textContent = data.explanation;
+        document.querySelector("#sql").textContent = data.sql;
+
+        renderRagSources(data.rag_sources);
+        renderTable(data.columns, data.rows);
+
+        statusBox.textContent = "分析完成";
+        resultBox.style.display = "block";
+      } catch (error) {
+        statusBox.className = "error";
+        statusBox.textContent = `分析失败：${error.message}`;
+      } finally {
+        submitButton.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
