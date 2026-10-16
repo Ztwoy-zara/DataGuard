@@ -21,3 +21,7 @@ data/olist_raw/
 
 # Local Chroma vector database
 rag/chroma_db/
+
+# Local notes and interview documents
+*.docx
+~$*.docx
